@@ -1,108 +1,42 @@
-print("Agent Context Bridge starting...")
-import json
-import os
-import subprocess
+# TODO: 下一阶段加入 Agent Adapter
+from pathlib import Path
 
-def load_context():
-    """
-    从 context/context.json 中读取上下文
-    """
-
-    with open(
-        "context/context.json",
-        "r",
-        encoding="utf-8"
-    ) as file:
-
-        context = json.load(file)
-
-    return context
+from agent_context.context_builder import build_context_pack
 
 
-def show_context(context):
-    """
-    将上下文中的主要信息显示到终端
-    """
+# 当前项目根目录
+BASE_DIR = Path(__file__).resolve().parent
 
-    print("=" * 50)
 
-    print("Agent Context Bridge")
+# 人工上下文文件
+CONTEXT_FILE = (
+    BASE_DIR
+    / "context"
+    / "context.json"
+)
 
-    print("=" * 50)
 
-    print()
+# 自动生成的 Context Pack
+OUTPUT_DIR = (
+    BASE_DIR
+    / ".agent-context"
+)
 
-    print("项目名称：")
-    print(context["project"]["name"])
-
-    print()
-
-    print("当前任务：")
-    print(context["task"]["title"])
-
-    print()
-
-    print("任务说明：")
-    print(context["task"]["description"])
-
-    print()
-
-    print("当前进度：")
-    print(context["progress"]["current"])
-
-    print()
-
-    print("下一步：")
-
-    for step in context["next_steps"]:
-        print("-", step)
-
-def run_git_command(command):
-    """
-    执行 Git 命令，并返回执行结果。
-    """
-
-    result = subprocess.run(
-        command,
-        shell=True,
-        capture_output=True,
-        text=True,
-        encoding="utf-8"
-    )
-
-    return result.stdout
-
-def get_git_status():
-
-    print()
-    print("正在读取 Git 状态...")
-
-    status = run_git_command("git status --short")
-
-    return status
 
 def main():
+    """
+    Agent Context Bridge 程序入口。
+    """
 
-    print("程序启动成功！")
+    print("=" * 60)
+    print("Agent Context Bridge v0.2")
+    print("=" * 60)
 
-    context = load_context()
-
-    if context is None:
-        return
-
-    show_context(context)
-
-    git_status = get_git_status()
-
-    print()
-    print("=" * 50)
-    print("Git 当前状态")
-    print("=" * 50)
-
-    if git_status.strip():
-        print(git_status)
-    else:
-        print("当前没有未提交修改。")
+    build_context_pack(
+        project_dir=BASE_DIR,
+        context_file=CONTEXT_FILE,
+        output_dir=OUTPUT_DIR
+    )
 
 
 if __name__ == "__main__":

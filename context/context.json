@@ -1,26 +1,43 @@
 {
-  "version": "1.0",
+  "version": "0.2",
 
   "project": {
-    "name": "demo-project",
-    "path": "",
+    "name": "agent-context",
+    "path": "D:/agent-context",
     "branch": "main"
   },
 
   "task": {
-    "title": "学习 Agent Context Bridge",
-    "description": "实现 Codex 和 Claude Code 之间的上下文迁移"
+    "title": "实现 Agent 上下文交接功能",
+    "description": "让 Codex 工作中途能够将当前任务状态交给 Claude Code 继续处理"
   },
 
   "progress": {
-    "completed": [],
-    "current": "设计第一版上下文结构",
-    "problems": []
+    "completed": [
+      "完成 Git 仓库初始化",
+      "实现 git status 自动读取",
+      "实现 git diff 自动读取",
+      "实现 git log 自动读取",
+      "完成第一版 Context Pack"
+    ],
+
+    "current": "实现面向其他 Agent 的 HANDOFF.md",
+
+    "problems": [
+      "目前还没有区分 Codex 和 Claude 的专属上下文格式"
+    ]
   },
 
-  "decisions": [],
+  "decisions": [
+    "使用 Git 作为代码修改事实来源",
+    "人工任务信息保存在 context.json",
+    "不迁移完整聊天历史"
+  ],
 
   "next_steps": [
-    "使用 Python 读取 context.json"
+    "增加 Claude Adapter",
+    "自动生成 CLAUDE.md",
+    "增加 Codex Adapter",
+    "自动生成 AGENTS.md"
   ]
 }

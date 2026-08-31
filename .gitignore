@@ -1,0 +1,11 @@
+# Agent Context Bridge 自动生成的上下文包
+.agent-context/
+
+# Python 自动产生的缓存目录
+__pycache__/
+
+# Python 编译缓存
+*.pyc
+
+# 以后可能创建的 Python 虚拟环境
+.venv/
