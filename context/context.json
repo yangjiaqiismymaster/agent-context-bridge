@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+
+  "project": {
+    "name": "demo-project",
+    "path": "",
+    "branch": "main"
+  },
+
+  "task": {
+    "title": "学习 Agent Context Bridge",
+    "description": "实现 Codex 和 Claude Code 之间的上下文迁移"
+  },
+
+  "progress": {
+    "completed": [],
+    "current": "设计第一版上下文结构",
+    "problems": []
+  },
+
+  "decisions": [],
+
+  "next_steps": [
+    "使用 Python 读取 context.json"
+  ]
+}
