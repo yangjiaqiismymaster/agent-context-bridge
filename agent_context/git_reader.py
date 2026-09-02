@@ -119,31 +119,83 @@ def get_git_staged_diff(project_dir):
 
 def get_git_log(project_dir):
     """
-    获取最近 5 次提交。
+    获取最近 5 次 Git 提交。
+
+    如果仓库还没有任何 Commit，
+    返回提示信息，而不是让整个程序失败。
     """
 
-    return run_git_command(
-        project_dir,
+    result = subprocess.run(
         [
+            "git",
             "log",
             "-5",
             "--oneline"
-        ]
+        ],
+        cwd=project_dir,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace"
+    )
+
+    # 正常存在 Git 历史
+    if result.returncode == 0:
+        return result.stdout.strip()
+
+    # ------------------------------------------------
+    # 一个合法 Git 仓库可能还没有第一次 Commit。
+    #
+    # 这种情况不是 Context Bridge 的致命错误。
+    # ------------------------------------------------
+
+    if (
+        "does not have any commits yet"
+        in result.stderr
+        or
+        "your current branch"
+        in result.stderr
+        and
+        "does not have any commits yet"
+        in result.stderr
+    ):
+        return "当前 Git 仓库还没有任何 Commit。"
+
+    # 其他 Git 错误仍然应该抛出
+    raise RuntimeError(
+        "Git 命令执行失败：git log -5 --oneline\n"
+        + result.stderr
     )
 
 
 def get_current_commit(project_dir):
     """
-    获取当前 HEAD 所在 commit 的完整哈希值。
+    获取当前 HEAD 对应的 Commit Hash。
+
+    如果当前仓库还没有任何 Commit，
+    返回特殊状态，而不是让程序失败。
     """
 
-    return run_git_command(
-        project_dir,
+    result = subprocess.run(
         [
+            "git",
             "rev-parse",
+            "--verify",
             "HEAD"
-        ]
+        ],
+        cwd=project_dir,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace"
     )
+
+    # 有 Commit
+    if result.returncode == 0:
+        return result.stdout.strip()
+
+    # 没有 Commit
+    return "NO_COMMIT"
 
 
 def collect_git_context(project_dir):
